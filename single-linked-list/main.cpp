@@ -75,18 +75,23 @@ void Test()
     }
 
     // Вспомогательный класс, бросающий исключение после создания N-копии
-    struct ThrowOnCopy {
+    struct ThrowOnCopy 
+    {
         ThrowOnCopy() = default;
         explicit ThrowOnCopy(int& copy_counter) noexcept
-            : countdown_ptr(&copy_counter) {
+            : countdown_ptr(&copy_counter) 
+        {
         }
         ThrowOnCopy(const ThrowOnCopy& other)
             : countdown_ptr(other.countdown_ptr)  //
         {
             if (countdown_ptr) {
-                if (*countdown_ptr == 0) {
+                if (*countdown_ptr == 0) 
+                {
                     throw std::bad_alloc();
-                } else {
+                } 
+                else 
+                {
                     --(*countdown_ptr);
                 }
             }
@@ -101,13 +106,17 @@ void Test()
     // Проверка обеспечения строгой гарантии безопасности исключений
     {
         bool exception_was_thrown = false;
-        for (int max_copy_counter = 10; max_copy_counter >= 0; --max_copy_counter) {
+        for (int max_copy_counter = 10; max_copy_counter >= 0; --max_copy_counter)
+        {
             SingleLinkedList<ThrowOnCopy> list{ThrowOnCopy{}, ThrowOnCopy{}, ThrowOnCopy{}};
-            try {
+            try 
+            {
                 int copy_counter = max_copy_counter;
                 list.InsertAfter(list.cbegin(), ThrowOnCopy(copy_counter));
                 assert(list.GetSize() == 4u);
-            } catch (const std::bad_alloc&) {
+            } 
+            catch (const std::bad_alloc&) 
+            {
                 exception_was_thrown = true;
                 assert(list.GetSize() == 3u);
                 break;
